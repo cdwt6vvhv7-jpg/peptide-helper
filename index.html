@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Peptide Tracker</title>
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="print.css" media="print">
+</head>
+<body>
+
+<header class="app-header no-print">
+  <div class="header-top">
+    <h1>Peptide Tracker</h1>
+    <span id="storageStatus" class="storage-status">Checking storage…</span>
+  </div>
+  <nav class="tabs" id="tabNav">
+    <button class="tab-btn active" data-tab="dashboard">Dashboard</button>
+    <button class="tab-btn" data-tab="inventory">Inventory</button>
+    <button class="tab-btn" data-tab="protocols">Protocols</button>
+    <button class="tab-btn" data-tab="schedule">Print Schedule</button>
+    <button class="tab-btn" data-tab="labels">Labels</button>
+    <button class="tab-btn" data-tab="reports">Reports</button>
+    <button class="tab-btn" data-tab="settings">Settings</button>
+  </nav>
+</header>
+
+<main id="app">
+
+  <section id="tab-dashboard" class="tab-panel active no-print">
+    <div id="dashboardContent"></div>
+  </section>
+
+  <section id="tab-inventory" class="tab-panel no-print">
+    <div id="inventoryContent"></div>
+  </section>
+
+  <section id="tab-protocols" class="tab-panel no-print">
+    <div id="protocolsContent"></div>
+  </section>
+
+  <section id="tab-schedule" class="tab-panel no-print">
+    <div id="scheduleControls"></div>
+    <div id="scheduleContent"></div>
+  </section>
+
+  <section id="tab-labels" class="tab-panel no-print">
+    <div id="labelsControls"></div>
+    <div id="labelsContent"></div>
+  </section>
+
+  <section id="tab-reports" class="tab-panel no-print">
+    <div id="reportsControls"></div>
+    <div id="reportsContent"></div>
+  </section>
+
+  <section id="tab-settings" class="tab-panel no-print">
+    <div id="settingsContent"></div>
+  </section>
+
+</main>
+
+<!-- Print-only surfaces, populated by JS just before printing -->
+<div id="printScheduleArea" class="print-only"></div>
+<div id="printLabelsArea" class="print-only"></div>
+<div id="printReportArea" class="print-only"></div>
+<style id="labelPageStyle"></style>
+
+<script src="calc.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,164 @@
+/* Only active during window.print(). app.js sets body[data-print-mode] to
+   "schedule" or "labels" right before calling print(), and clears it after. */
+
+.no-print { display: none !important; }
+.print-only { display: none; }
+
+body[data-print-mode="schedule"] {
+  background: #fff;
+  color: #000;
+}
+body[data-print-mode="schedule"] #printScheduleArea {
+  display: block;
+}
+
+/* Default page setup used for the schedule. app.js overrides @page (via
+   #labelPageStyle) with the label's exact mm size only when printing labels. */
+@page {
+  size: portrait;
+  margin: 12mm;
+}
+
+body[data-print-mode="labels"] {
+  background: #fff;
+  color: #000;
+}
+body[data-print-mode="labels"] #printLabelsArea {
+  display: block;
+}
+
+body[data-print-mode="report"] {
+  background: #fff;
+  color: #000;
+}
+body[data-print-mode="report"] #printReportArea {
+  display: block;
+}
+
+/* ---- Schedule (calendar) print layout ----
+   Day-list format, not a grid: every dose gets its own full-width row so a
+   day with 5-6+ peptides never gets cramped. Trades paper length (a month
+   view can span multiple pages) for a layout that always has room. */
+.sched-print-title { font-size: 1.15rem; font-weight: 700; margin-bottom: .15rem; }
+.sched-print-sub { font-size: .78rem; color: #333; margin-bottom: 4mm; }
+
+/* The schedule is a one-column table purely so the <thead> repeats at the top
+   of each printed page (display: table-header-group is what does it) and so a
+   page break lands between day rows, never through one. */
+.sched-table { width: 100%; border-collapse: collapse; }
+.sched-table thead { display: table-header-group; }
+.sched-table th { text-align: left; font-weight: 400; padding: 0; }
+.sched-table td { padding: 0; vertical-align: top; }
+
+.sched-day-block { page-break-inside: avoid; }
+.sched-table td { padding-bottom: 4mm; }
+/* The day heading is the page's structural anchor, so it's the strongest thing
+   on it — it used to inherit the screen theme's grey (print.css never set a
+   colour), which made the one element you navigate by the faintest. */
+.sched-day-header {
+  font-weight: 700; font-size: .88rem;
+  color: #000;
+  border-bottom: 1.2px solid #000;
+  padding-bottom: 2px;
+  margin-bottom: 3px;
+}
+.sched-day-subject { font-weight: 400; font-size: .78rem; color: #333; }
+.sched-day-subject::before { content: '· '; }
+.sched-subject-header {
+  font-size: .68rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em;
+  color: #000;
+  margin: 2.5mm 0 1px;
+}
+.sched-day-header + .sched-subject-header { margin-top: 1px; }
+
+/* check | time | peptide | dose. The fixed columns are what let you scan the
+   dose column straight down instead of re-reading each line to find it. */
+.sched-day-row {
+  display: grid;
+  grid-template-columns: auto 4.4em 1fr auto;
+  gap: 0 7px;
+  align-items: baseline;
+  padding: 4px 0;
+  border-bottom: 1px solid #ccc;
+  font-size: .8rem;
+  page-break-inside: avoid;
+}
+.sched-checkbox {
+  /* 3.5mm rather than 10px: this is ticked with a pen, off a printed page. */
+  width: 3.5mm; height: 3.5mm; border: .35mm solid #000;
+  flex: none; display: inline-block;
+  position: relative; top: .4mm;
+}
+.sched-checkbox.checked { background: #000; }
+.sched-time { font-size: .72rem; color: #333; }
+.sched-name { min-width: 0; }
+.sched-dose { font-weight: 700; text-align: right; white-space: nowrap; }
+.sched-blend-inline { display: block; color: #444; font-size: .88em; line-height: 1.3; }
+
+/* ---- Scheduled-totals appendix under a printed month ---- */
+.sched-totals { page-break-inside: avoid; margin-top: 6mm; }
+.sched-totals-title { font-size: .95rem; font-weight: 700; margin: 0 0 1mm; }
+.sched-totals-note { font-size: .68rem; color: #333; margin-bottom: 2mm; line-height: 1.35; }
+.sched-totals-table { width: 100%; border-collapse: collapse; font-size: .78rem; }
+.sched-totals-table th, .sched-totals-table td { text-align: left; padding: 3px 6px 3px 0; border-bottom: 1px solid #ccc; }
+/* colour/transform stated explicitly: styles.css prints too, and its screen
+   header style is a grey that all but disappears on paper. */
+.sched-totals-table th {
+  border-bottom: 1.2px solid #000;
+  font-weight: 700; font-size: .7rem;
+  color: #000; text-transform: uppercase; letter-spacing: .04em;
+}
+.sched-totals-table .num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.sched-totals-table tbody .num { font-weight: 700; }
+.sched-total-doses { font-weight: 400; color: #444; font-size: .9em; }
+.sched-total-none { color: #999; font-weight: 400; }
+
+/* ---- Consumption report print layout ---- */
+#printReportArea table { width: 100%; border-collapse: collapse; font-size: .82rem; }
+#printReportArea th, #printReportArea td { text-align: left; padding: 4px 6px 4px 0; border-bottom: 1px solid #ccc; }
+/* styles.css's global `th { color: var(--muted) }` applies when printing too,
+   so the colour has to be restated here or headers print washed out. */
+#printReportArea th { border-bottom: 1.2px solid #000; font-weight: 700; color: #000; }
+#printReportArea thead { display: table-header-group; }
+#printReportArea .num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+#printReportArea .report-total { font-weight: 700; }
+#printReportArea .report-dim { color: #444; }
+#printReportArea .report-none { color: #999; }
+#printReportArea .report-source { display: block; font-size: .8em; color: #444; }
+#printReportArea tfoot td { border-top: 1.2px solid #000; border-bottom: none; font-weight: 700; color: #000; }
+
+/* ---- Label print layout ---- */
+#printLabelsArea .label-sheet {
+  display: flex;
+  flex-wrap: wrap;
+}
+#printLabelsArea .label-box {
+  box-sizing: border-box;
+  border: 1px dashed #aaa;
+  overflow: hidden;
+  display: flex;
+  flex-direction: row;
+  page-break-after: always;
+  break-after: page;
+}
+.label-accent {
+  width: 5mm; flex: none; display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+}
+.label-accent .label-accent-text {
+  writing-mode: vertical-rl; transform: rotate(180deg);
+  font-size: 2.4mm; font-weight: 700; text-transform: uppercase; letter-spacing: .04em;
+  color: #fff; white-space: nowrap;
+}
+.label-body { flex: 1; min-width: 0; position: relative; display: flex; flex-direction: column; padding: 1.5mm 2mm; }
+.label-head { display: flex; align-items: center; gap: 1mm; padding-right: 8mm; }
+.label-logo { height: 4mm; width: auto; max-width: 8mm; object-fit: contain; flex: none; filter: grayscale(1) contrast(1.15); }
+.label-box .label-peptide { font-weight: 700; font-size: 4mm; line-height: 1.05; }
+.label-details { display: flex; justify-content: space-between; gap: 2mm; margin-top: auto; }
+.label-box .label-conc { font-size: 2.2mm; color: #333; }
+.label-box .label-dose { font-size: 2.2mm; color: #333; }
+.label-badge {
+  position: absolute; top: 1mm; right: 1mm;
+  border: .3mm solid #000; border-radius: 1mm;
+  padding: .2mm 1mm; font-size: 2.6mm; font-weight: 700; line-height: 1.15;
+}

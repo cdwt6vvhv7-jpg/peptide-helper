@@ -1,0 +1,362 @@
+:root {
+  color-scheme: light;
+  --bg: #f6f5f2;
+  --panel: #ffffff;
+  --panel-2: #fbfaf8;
+  --ink: #23241f;
+  --muted: #6b6f76;
+  --line: #e2e0da;
+  --accent: #3f6b52;
+  --accent-ink: #ffffff;
+  --warn: #b8862c;
+  --danger: #b23b3b;
+  --radius-sm: 6px;
+  --radius: 10px;
+  --radius-lg: 14px;
+  --subject-a: #3f6b52;
+  --subject-b: #6c4f9c;
+  --shadow-sm: 0 1px 2px rgba(30, 28, 20, 0.05);
+  --shadow-md: 0 4px 14px rgba(30, 28, 20, 0.07);
+  --focus-ring: 0 0 0 3px color-mix(in srgb, var(--accent) 30%, transparent);
+  --ease: 140ms cubic-bezier(.4,0,.2,1);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --bg: #16171a;
+    --panel: #212227;
+    --panel-2: #26272c;
+    --ink: #eceef0;
+    --muted: #9a9ea6;
+    --line: #34363c;
+    --accent: #6fae8b;
+    --accent-ink: #10231a;
+    --warn: #dcae5a;
+    --danger: #e08080;
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.25);
+    --shadow-md: 0 6px 20px rgba(0, 0, 0, 0.35);
+    --focus-ring: 0 0 0 3px color-mix(in srgb, var(--accent) 35%, transparent);
+  }
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: Calibri, "Segoe UI", -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
+}
+
+:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+  border-radius: var(--radius-sm);
+}
+
+.app-header {
+  padding: 1.25rem 1.5rem 0;
+  position: sticky;
+  top: 0;
+  background: var(--bg);
+  z-index: 5;
+  transition: box-shadow var(--ease);
+}
+.app-header h1 { margin: 0; font-size: 1.3rem; letter-spacing: -.01em; }
+.header-top { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; margin-bottom: .75rem; }
+.storage-status {
+  font-size: .74rem;
+  color: var(--muted);
+  border: 1px solid var(--line);
+  border-radius: 99px;
+  padding: .15rem .6rem;
+  white-space: nowrap;
+  transition: color var(--ease), border-color var(--ease);
+}
+.storage-status.ok { color: var(--accent); border-color: color-mix(in srgb, var(--accent) 40%, var(--line)); }
+.storage-status.ok::before { content: '●'; font-size: .6rem; margin-right: .35rem; vertical-align: 1px; }
+
+.tabs {
+  display: flex;
+  gap: .1rem;
+  border-bottom: 1px solid var(--line);
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+.tab-btn {
+  background: none;
+  border: none;
+  padding: .6rem 1rem;
+  font-size: .9rem;
+  color: var(--muted);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+  transition: color var(--ease), background var(--ease), border-color var(--ease);
+}
+.tab-btn.active { color: var(--ink); border-bottom-color: var(--accent); font-weight: 600; }
+.tab-btn:hover { color: var(--ink); background: color-mix(in srgb, var(--ink) 5%, transparent); }
+
+main#app { padding: 1.25rem 1.5rem 3rem; max-width: 980px; margin: 0 auto; }
+
+.tab-panel { display: none; }
+.tab-panel.active { display: block; animation: fade-in 160ms ease; }
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(2px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1.1rem 1.2rem;
+  margin-bottom: 1rem;
+  box-shadow: var(--shadow-sm);
+}
+
+h2 { font-size: 1.05rem; margin: 1.75rem 0 .7rem; letter-spacing: -.005em; }
+h2:first-child { margin-top: 0; }
+h3 { font-size: .95rem; margin: 0 0 .5rem; }
+
+.muted { color: var(--muted); font-size: .85rem; }
+.small { font-size: .82rem; }
+
+table { width: 100%; border-collapse: collapse; font-size: .9rem; }
+th, td { text-align: left; padding: .5rem .5rem; border-bottom: 1px solid var(--line); }
+th { color: var(--muted); font-weight: 600; font-size: .74rem; text-transform: uppercase; letter-spacing: .04em; }
+tbody tr { transition: background var(--ease); }
+tbody tr:hover { background: color-mix(in srgb, var(--ink) 3.5%, transparent); }
+tbody tr:last-child td { border-bottom: none; }
+
+.row { display: flex; gap: .6rem; flex-wrap: wrap; align-items: center; }
+.row > * { flex: 1 1 140px; }
+
+label { display: block; font-size: .78rem; color: var(--muted); margin-bottom: .25rem; }
+input, select, textarea {
+  width: 100%;
+  padding: .45rem .6rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--panel-2);
+  color: var(--ink);
+  font-size: .9rem;
+  font-family: inherit;
+  transition: border-color var(--ease), box-shadow var(--ease), background var(--ease);
+}
+input:hover, select:hover, textarea:hover { border-color: color-mix(in srgb, var(--ink) 25%, var(--line)); }
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: var(--focus-ring);
+}
+input::placeholder, textarea::placeholder { color: var(--muted); opacity: .8; }
+.field { margin-bottom: .6rem; }
+
+button.btn {
+  background: var(--accent);
+  color: var(--accent-ink);
+  border: none;
+  padding: .5rem 1rem;
+  border-radius: var(--radius-sm);
+  font-size: .85rem;
+  cursor: pointer;
+  font-weight: 600;
+  transition: filter var(--ease), background var(--ease), border-color var(--ease), transform 80ms ease;
+}
+button.btn:hover { filter: brightness(1.08); }
+button.btn:active { transform: translateY(1px); }
+button.btn.secondary { background: transparent; color: var(--ink); border: 1px solid var(--line); }
+button.btn.secondary:hover { background: color-mix(in srgb, var(--ink) 6%, transparent); border-color: color-mix(in srgb, var(--ink) 20%, var(--line)); filter: none; }
+button.btn.danger { background: transparent; color: var(--danger); border: 1px solid var(--danger); }
+button.btn.danger:hover { background: color-mix(in srgb, var(--danger) 10%, transparent); filter: none; }
+button.btn:disabled { opacity: .35; cursor: not-allowed; filter: none; transform: none; }
+
+.pill {
+  display: inline-block;
+  padding: .15rem .55rem;
+  border-radius: 99px;
+  font-size: .74rem;
+  font-weight: 600;
+  border: 1px solid transparent;
+}
+.pill.ok { background: color-mix(in srgb, var(--accent) 18%, transparent); color: var(--accent); border-color: color-mix(in srgb, var(--accent) 25%, transparent); }
+.pill.warn { background: color-mix(in srgb, var(--warn) 20%, transparent); color: var(--warn); border-color: color-mix(in srgb, var(--warn) 28%, transparent); }
+.pill.danger { background: color-mix(in srgb, var(--danger) 20%, transparent); color: var(--danger); border-color: color-mix(in srgb, var(--danger) 28%, transparent); }
+.pill.neutral { background: color-mix(in srgb, var(--muted) 16%, transparent); color: var(--muted); border-color: color-mix(in srgb, var(--muted) 24%, transparent); }
+
+.peptide-card-header { cursor: pointer; }
+.peptide-card-header .chevron {
+  display: inline-block;
+  width: 1em;
+  color: var(--muted);
+  font-size: .8em;
+}
+.peptide-card-header h3 .pill { margin-left: .35rem; }
+.peptide-card-header:hover h3 { color: var(--accent); }
+
+.subject-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  font-weight: 700;
+  font-size: .9rem;
+}
+.subject-dot { width: .6rem; height: .6rem; border-radius: 99px; display: inline-block; }
+
+.checkbox-grid { display: flex; gap: .4rem; flex-wrap: wrap; }
+.checkbox-grid label {
+  display: flex; align-items: center; gap: .3rem;
+  border: 1px solid var(--line); border-radius: var(--radius-sm); padding: .3rem .55rem;
+  font-size: .8rem; color: var(--ink); cursor: pointer;
+  transition: border-color var(--ease), background var(--ease);
+}
+.checkbox-grid label:hover { border-color: color-mix(in srgb, var(--ink) 25%, var(--line)); }
+.checkbox-grid input { width: auto; }
+
+.empty-state {
+  color: var(--muted); font-size: .85rem; padding: 1.1rem .8rem;
+  text-align: center; border: 1px dashed var(--line); border-radius: var(--radius-sm);
+}
+
+.item-list { display: flex; flex-direction: column; gap: .5rem; }
+.item-row {
+  display: flex; justify-content: space-between; align-items: center;
+  border: 1px solid var(--line); border-radius: var(--radius-sm); padding: .6rem .75rem;
+  background: var(--panel-2);
+  transition: border-color var(--ease), box-shadow var(--ease);
+}
+.item-row:hover { border-color: color-mix(in srgb, var(--ink) 18%, var(--line)); box-shadow: var(--shadow-sm); }
+.item-row .meta { font-size: .8rem; color: var(--muted); margin-top: .15rem; }
+.item-row .actions { display: flex; gap: .4rem; flex: none; }
+.item-row .actions button { font-size: .75rem; padding: .3rem .6rem; }
+
+.print-only { display: none; }
+.no-print { }
+
+.divider { border: none; border-top: 1px solid var(--line); margin: 1rem 0; }
+
+/* Dashboard "today" check-off */
+.dose-checkbox { width: auto; accent-color: var(--accent); cursor: pointer; }
+tr.dose-taken td { opacity: .55; }
+tr.dose-taken td:not(:first-child) { text-decoration: line-through; text-decoration-color: var(--muted); }
+
+/* Day / Week / Month segmented toggle (Dashboard) */
+.seg-control { display: inline-flex; border: 1px solid var(--line); border-radius: var(--radius-sm); overflow: hidden; background: var(--panel-2); }
+.seg-control button {
+  background: none; border: none; padding: .4rem 1rem; font-size: .82rem;
+  color: var(--muted); cursor: pointer; transition: background var(--ease), color var(--ease);
+}
+.seg-control button + button { border-left: 1px solid var(--line); }
+.seg-control button:hover:not(.active) { color: var(--ink); background: color-mix(in srgb, var(--ink) 5%, transparent); }
+.seg-control button.active { background: var(--accent); color: var(--accent-ink); font-weight: 600; }
+
+/* Schedule preview — day-list format (mirrors print.css structure) */
+.sched-print-title { font-size: 1.1rem; font-weight: 700; }
+.sched-print-sub { font-size: .85rem; color: var(--muted); margin-bottom: .6rem; }
+/* One-column table so the on-screen preview keeps the same structure the print
+   path needs for its repeating <thead> (see print.css). */
+.sched-table { width: 100%; border-collapse: collapse; }
+.sched-table th { text-align: left; font-weight: 400; padding: 0; }
+.sched-table td { padding: 0 0 1.1rem; vertical-align: top; }
+.sched-day-block { margin-bottom: 1.1rem; }
+.sched-table .sched-day-block { margin-bottom: 0; }
+
+.sched-totals { margin-top: 1.4rem; }
+.sched-totals-title { font-size: .95rem; font-weight: 700; margin: 0 0 .25rem; }
+.sched-totals-note { font-size: .75rem; color: var(--muted); margin-bottom: .6rem; line-height: 1.4; }
+.sched-totals-table { width: 100%; border-collapse: collapse; font-size: .85rem; }
+.sched-totals-table th, .sched-totals-table td { text-align: left; padding: .35rem .5rem .35rem 0; border-bottom: 1px solid var(--line); }
+.sched-totals-table th { font-size: .72rem; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); }
+.sched-totals-table .num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.sched-totals-table tbody .num { font-weight: 600; }
+.sched-total-doses { font-weight: 400; color: var(--muted); font-size: .85em; }
+.sched-total-none { color: var(--muted); font-weight: 400; }
+
+/* Consumption report */
+.report-preset { flex: 0 0 auto; font-size: .78rem; padding: .3rem .6rem; }
+/* .btn.secondary is defined later in this file at the same specificity, so the
+   selected state needs one more class to win. */
+.btn.report-preset.active { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.report-table { width: 100%; border-collapse: collapse; }
+.report-table .num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.report-table .report-total { font-weight: 600; }
+.report-table .report-dim { color: var(--muted); }
+.report-table .report-none { color: var(--muted); }
+.report-source { display: block; font-size: .75rem; color: var(--muted); }
+.report-table tfoot td { border-top: 1px solid var(--line); border-bottom: none; font-weight: 600; color: var(--muted); }
+.report-table tfoot .report-total { color: var(--ink); }
+.sched-day-header {
+  font-weight: 700; font-size: .82rem; text-transform: uppercase; letter-spacing: .03em;
+  color: var(--ink);
+  border-bottom: 1px solid var(--line); padding-bottom: .3rem; margin-bottom: .3rem;
+}
+.sched-day-subject { font-weight: 400; letter-spacing: 0; text-transform: none; color: var(--muted); }
+.sched-day-subject::before { content: '· '; }
+.sched-subject-header {
+  font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em;
+  color: var(--muted);
+  margin: .7rem 0 .1rem;
+}
+.sched-day-header + .sched-subject-header { margin-top: .2rem; }
+/* Same four columns as the printed sheet (see print.css) so the preview shows
+   the layout that comes out of the printer. */
+.sched-day-row {
+  display: grid;
+  grid-template-columns: auto 4.6em 1fr auto;
+  gap: 0 .5rem;
+  align-items: baseline;
+  padding: .3rem 0;
+  font-size: .85rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--line) 60%, transparent);
+}
+.sched-day-row:last-child { border-bottom: none; }
+.sched-day-row .sched-checkbox { width: .8rem; height: .8rem; border: 1px solid var(--muted); flex: none; display: inline-block; border-radius: 3px; transition: background var(--ease), border-color var(--ease); position: relative; top: .12rem; }
+.sched-day-row .sched-checkbox.checked { background: var(--accent); border-color: var(--accent); }
+.sched-day-row .dose-checkbox { position: relative; top: .15rem; }
+.sched-time { font-size: .78rem; color: var(--muted); }
+.sched-name { min-width: 0; }
+.sched-dose { font-weight: 600; text-align: right; white-space: nowrap; }
+.sched-draw { display: block; font-weight: 400; font-size: .82em; color: var(--muted); }
+.sched-blend-inline { display: block; color: var(--muted); font-size: .82em; }
+
+/* On-screen label preview — mirrors the print sizing/box so you can see
+   whether text fits the physical label before sending it to the printer. */
+.label-sheet { display: flex; flex-wrap: wrap; gap: .5rem; }
+.label-box {
+  box-sizing: border-box;
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: row;
+  background: var(--panel);
+  box-shadow: var(--shadow-sm);
+}
+.label-accent {
+  width: 5mm; flex: none; display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+}
+.label-accent .label-accent-text {
+  writing-mode: vertical-rl; transform: rotate(180deg);
+  font-size: 2.4mm; font-weight: 700; text-transform: uppercase; letter-spacing: .04em;
+  color: #fff; white-space: nowrap;
+}
+.label-body { flex: 1; min-width: 0; position: relative; display: flex; flex-direction: column; padding: 1.5mm 2mm; }
+.label-head { display: flex; align-items: center; gap: 1mm; padding-right: 8mm; }
+.label-logo { height: 4mm; width: auto; max-width: 8mm; object-fit: contain; flex: none; }
+.label-box .label-peptide { font-weight: 700; font-size: 4mm; line-height: 1.05; color: var(--ink); }
+.label-details { display: flex; justify-content: space-between; gap: 2mm; margin-top: auto; }
+.label-box .label-conc,
+.label-box .label-dose { font-size: 2.2mm; color: var(--muted); }
+.label-badge {
+  position: absolute; top: 1mm; right: 1mm;
+  border: .3mm solid var(--ink); border-radius: 1mm;
+  padding: .2mm 1mm; font-size: 2.6mm; font-weight: 700; line-height: 1.15;
+  color: var(--ink); background: var(--panel);
+}

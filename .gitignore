@@ -1,0 +1,7 @@
+# Personal dosing/inventory data — never share this
+data.json
+
+# Local tool config/session state
+.claude/
+
+.DS_Store
